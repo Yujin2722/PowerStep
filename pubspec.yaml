@@ -1,0 +1,57 @@
+name: powerstep_app
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.8.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI dependencies
+  cupertino_icons: ^1.0.8
+  google_fonts: ^5.0.0
+  salomon_bottom_bar: ^3.3.2
+  table_calendar: ^3.0.9
+  device_preview: ^1.1.0
+  video_player: ^2.10.0
+
+  # ✅ Bluetooth dependency (HC-05 uses Classic Bluetooth, not BLE)
+  flutter_bluetooth_serial:
+    path: plugins/flutter_bluetooth_serial
+  permission_handler: ^11.3.1
+
+  sqflite: ^2.4.2
+  path: ^1.9.1
+  shared_preferences: ^2.5.3
+
+  # Utilities
+  uuid: ^4.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: BukhariScript
+      fonts:
+        - asset: assets/fonts/Bukhari Script.ttf
+
+  assets:
+    - assets/images/logo_green.png
+    - assets/videos/splash_screen.mp4
+    - assets/images/device.png
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_icon_green.png"
+  min_sdk_android: 21
