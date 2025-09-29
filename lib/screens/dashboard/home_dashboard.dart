@@ -1,6 +1,7 @@
 // Home_dashboard.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../services/local_db_service.dart';
 
@@ -143,7 +144,7 @@ class _DashboardBodyState extends State<DashboardBody> {
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
-                                        Icons.local_fire_department,
+                                        CupertinoIcons.flame,
                                         color: Colors.black,
                                         size: 18,
                                       ),

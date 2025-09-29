@@ -24,6 +24,7 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
     final double distanceKm = (steps * 0.78) / 1000;
     final bpmStr = BluetoothService().bpm;
     final bpm = bpmStr.isNotEmpty ? bpmStr : "0";
+    final batteryStr = BluetoothService().battery;
 
     return RefreshIndicator(
       onRefresh: _refreshData,
@@ -264,7 +265,6 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
                         color: const Color.fromARGB(255, 207, 233, 188),
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      constraints: const BoxConstraints(minHeight: 120),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,7 +303,13 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
                               color: Colors.black,
                             ),
                           ),
-                          const Text("", style: TextStyle(fontSize: 14)),
+                          Text(
+                            "count",
+                            style: GoogleFonts.manrope(
+                              fontSize: 14,
+                              color: Colors.black87,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -339,10 +345,30 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
                                   color: Colors.white,
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(
-                                  CupertinoIcons.bolt,
-                                  color: Color.fromARGB(255, 0, 233, 119),
-                                  size: 18,
+                                child: Builder(
+                                  builder: (context) {
+                                    final level = int.tryParse(batteryStr) ?? 0;
+                                    Color batteryColor;
+
+                                    if (level > 75) {
+                                      batteryColor = const Color.fromARGB(
+                                        255,
+                                        0,
+                                        233,
+                                        119,
+                                      );
+                                    } else if (level > 30) {
+                                      batteryColor = Colors.orange;
+                                    } else {
+                                      batteryColor = Colors.red;
+                                    }
+
+                                    return Icon(
+                                      CupertinoIcons.bolt,
+                                      color: batteryColor,
+                                      size: 18,
+                                    );
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -363,11 +389,11 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            "100%",
+                            "$batteryStr%",
                             style: GoogleFonts.manrope(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                              color: Colors.white,
                             ),
                           ),
                           Text(
@@ -426,10 +452,6 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
     final today = DateTime.now();
     final dateStr =
         "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
-    await LocalDBService().upsertDailyStats(
-      dateStr,
-      calories,
-      distanceKm, 
-    );
+    await LocalDBService().upsertDailyStats(dateStr, calories, distanceKm);
   }
 }

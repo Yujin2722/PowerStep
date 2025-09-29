@@ -1,18 +1,24 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.powerstep_app">
 
-    <!-- 🔹 Old permissions (Android 11 and below) -->
+    <!-- 🔹 Old permissions (needed only up to Android 11 / API 30) -->
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="30"/>
 
-    <!-- 🔹 New permissions (Android 12 and above) -->
+    <!-- 🔹 New permissions (Android 12 / API 31 and above) -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN"
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
         android:usesPermissionFlags="neverForLocation"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
 
-    
+    <!-- 🔹 Nearby devices (Android 12+) -->
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:required="false"
+        android:usesPermissionFlags="neverForLocation" />
+
     <application
         android:label="PowerStep"
         android:name="${applicationName}"
@@ -46,9 +52,27 @@
 
     <!-- 🔹 Package visibility (needed for some plugins) -->
     <queries>
+        <!-- Required so your app can see Bluetooth devices -->
         <intent>
-            <action android:name="android.intent.action.PROCESS_TEXT"/>
-            <data android:mimeType="text/plain"/>
+            <action android:name="android.bluetooth.adapter.action.REQUEST_ENABLE"/>
+        </intent>
+        <intent>
+            <action android:name="android.bluetooth.device.action.PAIRING_REQUEST"/>
+        </intent>
+        <intent>
+            <action android:name="android.bluetooth.device.action.FOUND"/>
+        </intent>
+        <intent>
+            <action android:name="android.bluetooth.device.action.BOND_STATE_CHANGED"/>
+        </intent>
+        <intent>
+            <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+        </intent>
+        <intent>
+            <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+        </intent>
+        <intent>
+            <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED" />
         </intent>
     </queries>
 </manifest>

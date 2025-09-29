@@ -12,23 +12,35 @@ class BluetoothService {
   String bpm = "0";
   String steps = "0";
   String rawData = "";
+  String battery = "0";
 
   Future<void> connect(BluetoothDevice device) async {
     if (isConnected) return;
 
     _connection = await BluetoothConnection.toAddress(device.address);
-    _connection!.input!.listen((Uint8List data) {
-      String msg = String.fromCharCodes(data).trim();
-      rawData += msg + "\n";
+    _connection!.input!
+        .listen((Uint8List data) {
+          String msg = String.fromCharCodes(data).trim();
+          rawData += msg + "\n";
 
-      if (msg.contains("BPM=") && msg.contains("Steps=")) {
-        final parts = msg.split(' ');
-        bpm = parts[1].split('=')[1];
-        steps = parts[3].split('=')[1];
-      }
-    }).onDone(() {
-      disconnect();
-    });
+          if (msg.contains("BPM=")) {
+            final match = RegExp(r"BPM=([\d.]+)").firstMatch(msg);
+            if (match != null) bpm = match.group(1)!;
+          }
+
+          if (msg.contains("Steps=")) {
+            final match = RegExp(r"Steps=(\d+)").firstMatch(msg);
+            if (match != null) steps = match.group(1)!;
+          }
+
+          if (msg.contains("BAT=")) {
+            final match = RegExp(r"BAT=(\d+)%").firstMatch(msg);
+            if (match != null) battery = match.group(1)!;
+          }
+        })
+        .onDone(() {
+          disconnect();
+        });
   }
 
   void disconnect() {

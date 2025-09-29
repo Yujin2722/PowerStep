@@ -98,7 +98,7 @@ class _GoogleBottomBarState extends State<GoogleBottomBar> {
                             Icons.bluetooth,
                             color: Color.fromARGB(255, 255, 255, 255),
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 3),
                           Text(
                             'Connect',
                             style: GoogleFonts.manrope(
