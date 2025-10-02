@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import '/services/bluetooth_service.dart';
 import '/services/local_db_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HealthStatsPage extends StatefulWidget {
   const HealthStatsPage({super.key});
@@ -12,16 +13,68 @@ class HealthStatsPage extends StatefulWidget {
 }
 
 class _HealthStatsPageState extends State<HealthStatsPage> {
+  double _calories = 0;
+  double _distanceKm = 0;
+
   Future<void> _refreshData() async {
-    setState(() {});
+    await _calculateStats();
+  }
+
+  Future<void> _calculateStats() async {
+    final prefs = await SharedPreferences.getInstance();
+    final double height = prefs.getDouble('height')?.toDouble() ?? 0.0;
+    final double weight = prefs.getDouble('weight')?.toDouble() ?? 0.0;
+
+    final stepsStr = BluetoothService().steps;
+    final steps = int.tryParse(stepsStr) ?? 0;
+
+    final double stepLength = (height * 0.413).toDouble();
+    final double distanceKm = height > 0 ? (steps * stepLength) / 100000 : 0;
+
+    final double calories = (weight > 0 && distanceKm > 0)
+        ? distanceKm * weight
+        : 0.0;
+
+    setState(() {
+      _calories = calories;
+      _distanceKm = distanceKm;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateStats();
+    _saveDailyStats();
+  }
+
+  Future<void> _saveDailyStats() async {
+    final prefs = await SharedPreferences.getInstance();
+    final double height = prefs.getDouble('height') ?? 0;
+    final double weight = prefs.getDouble('weight') ?? 0;
+
+    final stepsStr = BluetoothService().steps;
+    final steps = int.tryParse(stepsStr) ?? 0;
+
+    final double stepLength = (height * 0.413).toDouble();
+    final double distanceKm = height > 0
+        ? ((steps * stepLength) / 100000).toDouble()
+        : 0.0;
+
+    final double calories = (weight > 0 && distanceKm > 0)
+        ? distanceKm * weight
+        : 0.0;
+
+    final today = DateTime.now();
+    final dateStr =
+        "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
+
+    await LocalDBService().upsertDailyStats(dateStr, calories, distanceKm);
   }
 
   @override
   Widget build(BuildContext context) {
     final stepsStr = BluetoothService().steps;
-    final steps = int.tryParse(stepsStr) ?? 0;
-    final double calories = steps * 0.04;
-    final double distanceKm = (steps * 0.78) / 1000;
     final bpmStr = BluetoothService().bpm;
     final bpm = bpmStr.isNotEmpty ? bpmStr : "0";
     final batteryStr = BluetoothService().battery;
@@ -105,7 +158,7 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            calories.toStringAsFixed(1),
+                            _calories.toStringAsFixed(1),
                             style: GoogleFonts.manrope(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
@@ -234,7 +287,7 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            distanceKm.toStringAsFixed(2),
+                            _distanceKm.toStringAsFixed(2),
                             style: GoogleFonts.manrope(
                               fontSize: 36,
                               fontWeight: FontWeight.bold,
@@ -436,22 +489,5 @@ class _HealthStatsPageState extends State<HealthStatsPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _saveDailyStats();
-  }
-
-  Future<void> _saveDailyStats() async {
-    final stepsStr = BluetoothService().steps;
-    final steps = int.tryParse(stepsStr) ?? 0;
-    final double calories = steps * 0.04;
-    final double distanceKm = (steps * 0.78) / 1000;
-    final today = DateTime.now();
-    final dateStr =
-        "${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}";
-    await LocalDBService().upsertDailyStats(dateStr, calories, distanceKm);
   }
 }

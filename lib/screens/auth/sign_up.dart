@@ -15,12 +15,52 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
+  final TextEditingController heightController = TextEditingController();
 
   bool isLoading = false;
   bool _obscurePassword = true;
   final db = LocalDBService();
 
   Future<void> _signUp() async {
+    if (nameController.text.trim().isEmpty ||
+        emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty ||
+        ageController.text.trim().isEmpty ||
+        weightController.text.trim().isEmpty ||
+        heightController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields.")),
+      );
+      return;
+    }
+
+    final age = int.tryParse(ageController.text.trim());
+    final weight = double.tryParse(weightController.text.trim());
+    final height = double.tryParse(heightController.text.trim());
+
+    if (age == null || age <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid age.")),
+      );
+      return;
+    }
+
+    if (weight == null || weight <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid weight in kg.")),
+      );
+      return;
+    }
+
+    if (height == null || height <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid height in cm.")),
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     final newUser = UserModel(
@@ -28,6 +68,11 @@ class _SignUpState extends State<SignUp> {
       name: nameController.text.trim(),
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
+      age: age,
+      weight: weight,
+      height: height,
+      steps: 0,
+      calories: 0.0,
     );
 
     await db.addUser(newUser);
@@ -79,7 +124,7 @@ class _SignUpState extends State<SignUp> {
                   controller: nameController,
                   decoration: _inputDecoration("Enter your full name"),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -96,7 +141,7 @@ class _SignUpState extends State<SignUp> {
                   controller: emailController,
                   decoration: _inputDecoration("Enter your email address"),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -128,7 +173,77 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
+                // Age
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Age",
+                    style: GoogleFonts.manrope(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: ageController,
+                  keyboardType: TextInputType.number,
+                  decoration: _inputDecoration("Enter your age"),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    // Weight
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Weight",
+                            style: GoogleFonts.manrope(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: weightController,
+                            keyboardType: TextInputType.number,
+                            decoration: _inputDecoration("kg"),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+
+                    // Height
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Height",
+                            style: GoogleFonts.manrope(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: heightController,
+                            keyboardType: TextInputType.number,
+                            decoration: _inputDecoration("cm"),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -152,7 +267,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

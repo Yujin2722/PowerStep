@@ -180,7 +180,59 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             style: GoogleFonts.manrope(),
             decoration: _inputDecoration('Height (cm)'),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
+          Card(
+            color: Colors.white,
+            elevation: 0,
+            margin: EdgeInsets.zero, 
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: const BorderSide(
+                color: Color.fromARGB(255, 0, 233, 119),
+                width: 1.5,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        Text(
+                          'We only use your age, weight, and height to ensure accurate calculations of calories burned and distance traveled.',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 13,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          'Your information is kept private and is never shared.',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 246, 77, 94),
+                            fontSize: 11,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    color: Color.fromARGB(255, 0, 233, 119),
+                    size: 42,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
           ElevatedButton(
             onPressed: _saveUserData,
             style: ElevatedButton.styleFrom(

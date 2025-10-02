@@ -129,7 +129,7 @@ class _GoogleBottomBarState extends State<GoogleBottomBar> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,

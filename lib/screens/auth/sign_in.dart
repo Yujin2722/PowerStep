@@ -35,10 +35,17 @@ class _SignInState extends State<SignIn> {
   final db = LocalDBService();
 
   Future<void> _signIn() async {
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields.")),
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     final users = await db.getUsers();
-
     final user = users.firstWhere(
       (u) => u.email == emailController.text.trim(),
       orElse: () => UserModel(uid: '', name: '', email: '', password: ''),
@@ -56,7 +63,6 @@ class _SignInState extends State<SignIn> {
 
     if (user.password == passwordController.text.trim()) {
       setState(() => isLoading = false);
-      // Save login state
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('loggedInUserId', user.uid);
       if (!mounted) return;
@@ -140,7 +146,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -164,7 +170,7 @@ class _SignInState extends State<SignIn> {
                         ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
