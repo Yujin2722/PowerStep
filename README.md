@@ -1,4 +1,4 @@
-# 🚀 PowerStep
+# ⚡ PowerStep
 
 PowerStep is an IoT-based fitness tracking app built with Flutter. It connects to a **smart, energy-converting insole** via Bluetooth — allowing users to monitor their steps, heart rate, and calories burned, while also tracking the energy generated from walking. The goal is to demonstrate sustainable energy harvesting through wearable technology.
 
