@@ -32,7 +32,7 @@ PowerStep is an IoT-based fitness tracking app built with Flutter. It connects t
 
 ## 🚀 Getting Started
 
-👉 [Download APK](https://github.com/Yujin2722/PowerStep/releases)  
+👉 [Download APK from Google Drive](https://drive.google.com/file/d/1PqnJD3IJdA2OpAjcRARNjqFFsbFtz-Vf/view?usp=sharing)  
 (or install manually following the steps below)
 
 ```bash
