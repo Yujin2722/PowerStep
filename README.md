@@ -26,7 +26,6 @@ PowerStep is an IoT-based fitness tracking app built with Flutter. It connects t
 - [Flutter](https://flutter.dev)
 - [sqflite](https://pub.dev/packages/sqflite) for local data storage
 - [Provider](https://pub.dev/packages/provider) for state management
-- [Dio](https://pub.dev/packages/dio) for HTTP requests
 - [Bluetooth Low Energy (BLE)](https://pub.dev/packages/flutter_blue_plus) for IoT device communication
 
 ---
