@@ -16,7 +16,7 @@ PowerStep is an IoT-based fitness tracking app built with Flutter. It connects t
 
 ## 📸 Screenshots
 
-![powerstep](screenshots/powerstep.png)
+![powerstep1](screenshots/powerstep1.png)
 ![powerstep2](screenshots/powerstep2_1.png)
 ![powerstep3](screenshots/powerstep3_1.png)
 
